@@ -1,135 +1,123 @@
-
 {% extends 'patient/base.html' %}
-{% load static %}
 
 {% block content %}
 
-<style>
-    /* 🌄 Background styling */
-    body {
-        background: url('{% static 'images/patient.jpg' %}'); no-repeat center center fixed;
-        background-size: cover;
-    }
+<div class="glass-card">
 
-    .dashboard-container {
-        background: rgba(38, 59, 137, 0.3);
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
+    <h1 class="page-title">
+        Welcome, {{ request.user.patient.first_name }} 👋
+    </h1>
 
-    .welcome-text {
-        font-weight: 700;
-        font-size: 1.8rem;
-        color: #040a38ff;
-    }
+    <!-- Stats -->
+    <div class="row g-4 mb-5">
 
-    .upcoming-section {
-        margin-top: 40px;
-    }
+        <div class="col-md-4">
 
-    .upcoming-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 20px;
-        color: #07539bff;
-    }
+            <div class="card p-4">
 
-    /* 🩺 Appointment Cards */
-    .appointment-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-        padding: 18px 22px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+                <h6 class="text-muted">
+                    Upcoming Appointments
+                </h6>
 
-    .appointment-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
+                <h2 class="fw-bold mt-2">
+                    {{ upcoming_bookings|length }}
+                </h2>
 
-    .appointment-card h5 {
-        font-weight: 600;
-        color: #0b2449;
-        margin-bottom: 8px;
-    }
+            </div>
 
-    .appointment-info p {
-        margin: 2px 0;
-        font-size: 0.95rem;
-        color: #333;
-    }
-
-    .btn-join {
-        margin-top: 15px;
-        background-color: #28a745; /* Success/Green */
-        border-color: #28a745;
-        font-weight: 600;
-        padding: 8px 15px;
-        border-radius: 8px;
-        transition: background-color 0.2s;
-    }
-
-    .btn-join:hover {
-        background-color: #218838;
-        border-color: #1e7e34;
-    }
-
-    .no-bookings {
-        font-style: italic;
-        color: #777;
-    }
-</style>
-
-<div class="dashboard-container">
-    <h1 class="welcome-text">Welcome, {{ request.user.patient.first_name }}!</h1>
-
-    <!-- Profile -->
-    <div class="card mt-4">
-        <div class="card-body">
-            <h5 class="card-title">Your Profile</h5>
-            <p><strong>Full Name:</strong> {{ request.user.patient.first_name }} {{ request.user.patient.last_name }}</p>
-            <p><strong>Email:</strong> {{ request.user.email }}</p>
-            <p><strong>Gender:</strong> {{ request.user.patient.get_gender_display }}</p>
         </div>
-    </div>
 
-    <!-- Medical History -->
-    <div class="card mt-4">
-        <div class="card-body">
-            <h5 class="card-title">Medical History</h5>
-            <p>{{ request.user.patient.medical_history|default:"No history available." }}</p>
+        <div class="col-md-4">
+
+            <div class="card p-4">
+
+                <h6 class="text-muted">
+                    Email
+                </h6>
+
+                <p class="mt-2 mb-0">
+                    {{ request.user.email }}
+                </p>
+
+            </div>
+
         </div>
+
+        <div class="col-md-4">
+
+            <div class="card p-4">
+
+                <h6 class="text-muted">
+                    Role
+                </h6>
+
+                <p class="mt-2 mb-0 text-capitalize">
+                    {{ request.user.role }}
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
 
     <!-- Upcoming Appointments -->
-    <div class="upcoming-section">
-        <h3 class="upcoming-title">Upcoming Appointments</h3>
 
-        {% if upcoming_bookings %}
-        <div class="row g-3">
-            {% for booking in upcoming_bookings %}
-            <div class="col-md-4">
-                <div class="appointment-card">
-                    <h5>{{ booking.doctor.fullname }}</h5>
-                    <div class="appointment-info">
-                        <p><strong>Reason:</strong> {{ booking.reason|default:"N/A" }}</p>
-                        <p><strong>Date:</strong> {{ booking.date|date:"M d, Y" }}</p>
-                        <p><strong>Time:</strong> {{ booking.time|time:"g:i A" }}</p>
-                    </div>
-                    <button type="button" class="btn btn-join btn-block" onclick="alert('Joining appointment with Dr. {{ booking.doctor.fullname }}...')">
-                        Join Now
-                    </button>
-                </div>
+    <h3 class="fw-bold mb-4">
+        Upcoming Appointments
+    </h3>
+
+    {% if upcoming_bookings %}
+
+    <div class="row g-4">
+
+        {% for booking in upcoming_bookings %}
+
+        <div class="col-md-4">
+
+            <div class="card p-4 h-100">
+
+                <h5 class="fw-bold mb-3">
+                    Dr. {{ booking.doctor.fullname }}
+                </h5>
+
+                <p>
+                    <strong>Date:</strong>
+                    {{ booking.date }}
+                </p>
+
+                <p>
+                    <strong>Time:</strong>
+                    {{ booking.time }}
+                </p>
+
+                <p>
+                    <strong>Reason:</strong>
+                    {{ booking.reason }}
+                </p>
+
+                <button class="custom-btn mt-3">
+                    Join Consultation
+                </button>
+
             </div>
-            {% endfor %}
+
         </div>
-        {% else %}
-        <p class="no-bookings">You have no upcoming appointments.</p>
-        {% endif %}
+
+        {% endfor %}
+
     </div>
+
+    {% else %}
+
+    <div class="alert alert-info mt-4">
+
+        No upcoming appointments.
+
+    </div>
+
+    {% endif %}
+
 </div>
 
 {% endblock %}
-

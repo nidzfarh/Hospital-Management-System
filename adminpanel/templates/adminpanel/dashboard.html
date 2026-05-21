@@ -1,0 +1,328 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+
+    <div>
+
+        <h1 class="fw-bold display-6">
+
+            Admin Dashboard
+
+        </h1>
+
+        <p class="text-muted">
+
+            Welcome back, Admin 👋
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- STATS -->
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+
+        <div class="stats-card">
+
+            <div>
+
+                <p class="stats-title">
+
+                    Total Patients
+
+                </p>
+
+                <h1>
+
+                    {{ patients_count }}
+
+                </h1>
+
+            </div>
+
+            <div class="stats-icon">
+
+                👨‍⚕️
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="stats-card">
+
+            <div>
+
+                <p class="stats-title">
+
+                    Doctors
+
+                </p>
+
+                <h1>
+
+                    {{ doctors_count }}
+
+                </h1>
+
+            </div>
+
+            <div class="stats-icon">
+
+                🩺
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="stats-card">
+
+            <div>
+
+                <p class="stats-title">
+
+                    Appointments
+
+                </p>
+
+                <h1>
+
+                    {{ bookings_count }}
+
+                </h1>
+
+            </div>
+
+            <div class="stats-icon">
+
+                📅
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="stats-card">
+
+            <div>
+
+                <p class="stats-title">
+
+                    Users
+
+                </p>
+
+                <h1>
+
+                    {{ users_count }}
+
+                </h1>
+
+            </div>
+
+            <div class="stats-icon">
+
+                👥
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="table-card mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h3 class="fw-bold">
+
+            Recent Appointments
+
+        </h3>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Reason</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for booking in recent_bookings %}
+
+                <tr>
+
+                    <td>
+
+                        {{ booking.patient_full_name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ booking.doctor.fullname }}
+
+                    </td>
+
+                    <td>
+
+                        {{ booking.date }}
+
+                    </td>
+
+                    <td>
+
+                        {{ booking.reason }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<style>
+
+.stats-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:28px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.06);
+
+    transition:0.3s;
+
+}
+
+.stats-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.stats-title{
+
+    color:#64748b;
+
+    font-weight:600;
+
+    margin-bottom:10px;
+
+}
+
+.stats-card h1{
+
+    font-size:2.3rem;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+.stats-icon{
+
+    font-size:2.5rem;
+
+}
+
+.table-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:30px;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.06);
+
+}
+
+table{
+
+    border-collapse:separate;
+
+    border-spacing:0 12px;
+
+}
+
+thead th{
+
+    border:none;
+
+    color:#64748b;
+
+    font-size:0.95rem;
+
+}
+
+tbody tr{
+
+    background:#f8fafc;
+
+    border-radius:16px;
+
+}
+
+tbody td{
+
+    padding:18px !important;
+
+    border:none;
+
+}
+
+</style>
+
+{% endblock %}

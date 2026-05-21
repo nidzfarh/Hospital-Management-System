@@ -1,0 +1,69 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block content %}
+
+<div class="table-card">
+
+    <h2 class="fw-bold mb-4">
+
+        Patients
+
+    </h2>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Email</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for patient in patients %}
+
+            <tr>
+
+                <td>
+
+                    {{ patient.first_name }}
+                    {{ patient.last_name }}
+
+                </td>
+
+                <td>
+
+                    {{ patient.age }}
+
+                </td>
+
+                <td>
+
+                    {{ patient.gender }}
+
+                </td>
+
+                <td>
+
+                    {{ patient.email }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

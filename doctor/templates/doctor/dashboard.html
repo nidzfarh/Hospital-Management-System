@@ -1,0 +1,409 @@
+{% extends 'doctor/base.html' %}
+
+{% block content %}
+
+<div class="dashboard-header">
+
+    <div>
+
+        <h1>
+
+            Doctor Dashboard
+
+        </h1>
+
+        <p>
+
+            Welcome back, Dr. {{ request.user.username }}
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- STATS -->
+
+<div class="stats-grid">
+
+    <!-- TOTAL PATIENTS -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            👨‍⚕️
+
+        </div>
+
+        <div>
+
+            <h3>
+
+                Total Patients
+
+            </h3>
+
+            <h1>
+
+                {{ total_patients }}
+
+            </h1>
+
+        </div>
+
+    </div>
+
+    <!-- TODAY PATIENTS -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            📅
+
+        </div>
+
+        <div>
+
+            <h3>
+
+                Today's Patients
+
+            </h3>
+
+            <h1>
+
+                {{ today_patients }}
+
+            </h1>
+
+        </div>
+
+    </div>
+
+    <!-- APPOINTMENTS -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            🩺
+
+        </div>
+
+        <div>
+
+            <h3>
+
+                Appointments
+
+            </h3>
+
+            <h1>
+
+                {{ today_appointments }}
+
+            </h1>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- APPOINTMENTS TABLE -->
+
+<div class="table-card">
+
+    <div class="table-header">
+
+        <h2>
+
+            Upcoming Appointments
+
+        </h2>
+
+    </div>
+
+    <table class="table align-middle">
+
+        <thead>
+
+            <tr>
+
+                <th>Patient</th>
+
+                <th>Date</th>
+
+                <th>Time</th>
+
+                <th>Doctor</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for booking in recent_bookings %}
+
+            <tr>
+
+                <td>
+
+                    {{ booking.patient_full_name }}
+
+                </td>
+
+                <td>
+
+                    {{ booking.date }}
+
+                </td>
+
+                <td>
+
+                    {{ booking.time }}
+
+                </td>
+
+                <td>
+
+                    {{ booking.doctor.fullname }}
+
+                </td>
+
+                <td>
+
+                    <span class="badge bg-success">
+
+                        Upcoming
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="text-center text-muted py-4"
+                >
+
+                    No appointments found.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<style>
+
+.dashboard-header{
+
+    margin-bottom:35px;
+
+}
+
+.dashboard-header h1{
+
+    font-size:3rem;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+.dashboard-header p{
+
+    color:#64748b;
+
+    margin-top:10px;
+
+    font-size:1.05rem;
+
+}
+
+/* STATS */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
+    gap:25px;
+
+    margin-bottom:35px;
+
+}
+
+.stat-card{
+
+    background:white;
+
+    padding:28px;
+
+    border-radius:26px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:22px;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.06);
+
+    transition:0.3s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.stat-icon{
+
+    width:72px;
+    height:72px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:2rem;
+
+    background:
+    linear-gradient(
+    135deg,
+    #2563eb,
+    #06b6d4
+    );
+
+    color:white;
+
+}
+
+.stat-card h3{
+
+    font-size:1rem;
+
+    color:#64748b;
+
+    margin-bottom:10px;
+
+}
+
+.stat-card h1{
+
+    font-size:2.7rem;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+/* TABLE */
+
+.table-card{
+
+    background:white;
+
+    border-radius:26px;
+
+    padding:30px;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.06);
+
+}
+
+.table-header{
+
+    margin-bottom:20px;
+
+}
+
+.table-header h2{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+.table{
+
+    margin:0;
+
+}
+
+.table thead th{
+
+    color:#64748b;
+
+    border:none;
+
+    padding:16px;
+
+}
+
+.table tbody td{
+
+    padding:18px 16px;
+
+    vertical-align:middle;
+
+}
+
+.table tbody tr{
+
+    transition:0.3s;
+
+}
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+.badge{
+
+    padding:10px 14px;
+
+    border-radius:12px;
+
+    font-size:0.85rem;
+
+}
+
+</style>
+
+{% endblock %}

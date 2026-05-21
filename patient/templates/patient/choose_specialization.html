@@ -1,34 +1,140 @@
 {% extends 'patient/base.html' %}
 
 {% block content %}
-<h2>Book Appointment</h2>
 
-<!-- Specialization selection form -->
-<form method="GET" id="spec-form">
-    <label>Select Specialization:</label>
-    <select name="specialization" required onchange="document.getElementById('spec-form').submit()">
-        <option value="">-- Choose --</option>
-        {% for spec in specializations %}
-            <option value="{{ spec }}" {% if spec == selected_spec %}selected{% endif %}>{{ spec }}</option>
-        {% endfor %}
-    </select>
-</form>
+<div class="glass-card" style="max-width:700px; margin:auto;">
 
-<!-- Doctor dropdown -->
-{% if doctors %}
-    <form method="GET" action="{% url 'booking' %}">
-        <label>Select Doctor:</label>
-        <select name="doctor" required>
-            <option value="">-- Choose Doctor --</option>
-            {% for doctor in doctors %}
-                <option value="{{ doctor.id }}">{{ doctor.fullname }}</option>
-            {% endfor %}
-        </select>
+    <div class="text-center mb-5">
 
-        <!-- Optional: include the specialization so it persists in booking view -->
-        <input type="hidden" name="specialization" value="{{ selected_spec }}">
-        <button type="submit">Next</button>
+        <h1 class="page-title">
+            Choose Specialization
+        </h1>
+
+        <p class="text-muted">
+
+            Select a medical specialization to continue booking
+
+        </p>
+
+    </div>
+
+    <form method="GET" id="spec-form">
+
+        <div class="mb-4">
+
+            <label class="fw-bold mb-3">
+
+                Medical Specialization
+
+            </label>
+
+            <select
+                name="specialization"
+                class="form-select p-3 rounded-4"
+                onchange="document.getElementById('spec-form').submit()"
+            >
+
+                <option value="">
+                    Select Specialization
+                </option>
+
+                {% for spec in specializations %}
+
+                <option
+                    value="{{ spec }}"
+                    {% if spec == selected_spec %}selected{% endif %}
+                >
+
+                    {{ spec }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
     </form>
-{% endif %}
+
+    {% if doctors %}
+
+    <form method="GET" action="{% url 'booking' %}">
+
+        <div class="mb-4">
+
+            <label class="fw-bold mb-3">
+
+                Available Doctors
+
+            </label>
+
+            <select
+                name="doctor"
+                class="form-select p-3 rounded-4"
+                required
+            >
+
+                <option value="">
+                    Choose Doctor
+                </option>
+
+                {% for doctor in doctors %}
+
+                <option value="{{ doctor.id }}">
+
+                    Dr. {{ doctor.fullname }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <input
+            type="hidden"
+            name="specialization"
+            value="{{ selected_spec }}"
+        >
+
+        <button
+            type="submit"
+            class="custom-btn w-100"
+        >
+
+            Continue Booking
+
+        </button>
+
+    </form>
+
+    {% endif %}
+
+</div>
+
+<style>
+
+    select{
+
+        width:100%;
+        padding:14px;
+        border-radius:16px;
+        border:1px solid #dbeafe;
+        background:#f8fafc;
+        transition:0.3s;
+
+    }
+
+    select:focus{
+
+        outline:none;
+        border-color:#2563eb;
+        box-shadow:0 0 0 4px rgba(37,99,235,0.1);
+
+    }
+
+</style>
 
 {% endblock %}

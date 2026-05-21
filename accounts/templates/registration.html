@@ -1,149 +1,604 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Registration</title>
-  <link rel="stylesheet" href="{% static 'css/login.css' %}">
-  <style>
-    .role-select {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 16px;
-      gap: 20px;
-    }
-    .role-select label {
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h2>Register</h2>
 
-    <!-- Role selection -->
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>HMS Registration</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+        body{
+
+            font-family:'Inter',sans-serif;
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:
+            linear-gradient(
+            135deg,
+            #eff6ff,
+            #dbeafe
+            );
+
+            padding:40px;
+
+        }
+
+        .register-card{
+
+            width:100%;
+
+            max-width:650px;
+
+            background:white;
+
+            padding:45px;
+
+            border-radius:32px;
+
+            box-shadow:
+            0 15px 40px rgba(0,0,0,0.08);
+
+        }
+
+        .title{
+
+            font-size:2.4rem;
+
+            font-weight:800;
+
+            color:#0f172a;
+
+            margin-bottom:8px;
+
+        }
+
+        .subtitle{
+
+            color:#64748b;
+
+            margin-bottom:35px;
+
+        }
+
+        .role-select{
+
+            display:flex;
+
+            gap:16px;
+
+            margin-bottom:30px;
+
+        }
+
+        .role-card{
+
+            flex:1;
+
+            padding:18px;
+
+            border-radius:18px;
+
+            border:2px solid #dbeafe;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+            text-align:center;
+
+            font-weight:700;
+
+        }
+
+        .role-card.active{
+
+            background:
+            linear-gradient(
+            135deg,
+            #2563eb,
+            #06b6d4
+            );
+
+            color:white;
+
+            border:none;
+
+        }
+
+        .form-control,
+        .form-select{
+
+            border-radius:14px;
+
+            padding:14px;
+
+            border:1px solid #dbeafe;
+
+            margin-bottom:20px;
+
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+
+            border-color:#2563eb;
+
+            box-shadow:
+            0 0 0 4px rgba(37,99,235,0.1);
+
+        }
+
+        .btn-register{
+
+            width:100%;
+
+            border:none;
+
+            padding:15px;
+
+            border-radius:16px;
+
+            font-weight:700;
+
+            color:white;
+
+            background:
+            linear-gradient(
+            135deg,
+            #2563eb,
+            #06b6d4
+            );
+
+            transition:0.3s;
+
+            margin-top:10px;
+
+        }
+
+        .btn-register:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:
+            0 10px 20px rgba(37,99,235,0.2);
+
+        }
+
+        .hidden{
+
+            display:none;
+
+        }
+
+        .bottom-link{
+
+            text-align:center;
+
+            margin-top:25px;
+
+            color:#64748b;
+
+        }
+
+        .bottom-link a{
+
+            color:#2563eb;
+
+            text-decoration:none;
+
+            font-weight:600;
+
+        }
+
+        .alert{
+
+            border-radius:14px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="register-card">
+
+    <h1 class="title">
+
+        Create Account
+
+    </h1>
+
+    <p class="subtitle">
+
+        Register as a patient or doctor
+
+    </p>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-danger">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- ROLE SELECT -->
+
     <div class="role-select">
-      <label>
-        <input type="radio" name="role-choice" value="patient" checked onclick="toggleForm()"> Patient
-      </label>
-      <label>
-        <input type="radio" name="role-choice" value="doctor" onclick="toggleForm()"> Doctor
-      </label>
+
+        <div
+            class="role-card active"
+            id="patient-card"
+            onclick="selectRole('patient')"
+        >
+
+            🧑 Patient
+
+        </div>
+
+        <div
+            class="role-card"
+            id="doctor-card"
+            onclick="selectRole('doctor')"
+        >
+
+            👨‍⚕️ Doctor
+
+        </div>
+
     </div>
 
-    <!-- Registration form -->
-    <form action="{% url 'register' %}" method="post" class="form">
-      {% csrf_token %}
+    <!-- FORM -->
 
-      <!-- Common fields -->
-      <div class="form-group">
-        <label> username</label>
-        <input type="text" name="username" required>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" required>
-      </div>
+    <form
+        method="POST"
+        action="{% url 'register' %}"
+    >
 
-      <!-- Patient fields -->
-      <div id="patient-fields">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" name="patient_name" required>
+        {% csrf_token %}
+
+        <input
+            type="hidden"
+            name="role"
+            id="role-input"
+            value="patient"
+        >
+
+        <!-- COMMON -->
+
+        <input
+            type="text"
+            name="username"
+            class="form-control"
+            placeholder="Username"
+            required
+        >
+
+        <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Email"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required
+        >
+
+        <!-- PATIENT -->
+
+        <div id="patient-fields">
+
+            <input
+                type="text"
+                name="patient_name"
+                class="form-control"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="number"
+                name="patient_age"
+                class="form-control"
+                placeholder="Age"
+                required
+            >
+
+            <select
+                name="patient_gender"
+                class="form-select"
+                required
+            >
+
+                <option value="">
+
+                    Select Gender
+
+                </option>
+
+                <option value="M">
+
+                    Male
+
+                </option>
+
+                <option value="F">
+
+                    Female
+
+                </option>
+
+                <option value="O">
+
+                    Other
+
+                </option>
+
+            </select>
+
+            <input
+                type="text"
+                name="phone_number"
+                class="form-control"
+                placeholder="Phone Number"
+                required
+            >
+
         </div>
-        <div class="form-group">
-          <label>Age</label>
-          <input type="number" name="patient_age" min="0" required>
+
+        <!-- DOCTOR -->
+
+        <div
+            id="doctor-fields"
+            class="hidden"
+        >
+
+            <input
+                type="text"
+                name="doctor_name"
+                class="form-control"
+                placeholder="Doctor Name"
+            >
+
+            <select
+                name="specialization"
+                class="form-select"
+            >
+
+                <option value="Cardiology">
+
+                    Cardiology
+
+                </option>
+
+                <option value="Neurology">
+
+                    Neurology
+
+                </option>
+
+                <option value="Orthopedics">
+
+                    Orthopedics
+
+                </option>
+
+                <option value="Pediatrics">
+
+                    Pediatrics
+
+                </option>
+
+                <option value="Dermatology">
+
+                    Dermatology
+
+                </option>
+
+            </select>
+
+            <input
+                type="number"
+                name="experience"
+                class="form-control"
+                placeholder="Experience (Years)"
+            >
+
         </div>
-        <div class="form-group">
-          <label>Gender</label>
-          <select name="patient_gender" required>
-            <option value="">--Select--</option>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-            <option value="O">Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input type="text" name="phone_number" required>
-        </div>
-      </div>
 
-      <!-- Doctor fields -->
-      <div id="doctor-fields" class="hidden">
-  <div class="form-group">
-    <label>Full Name</label>
-    <input type="text" name="doctor_name">
-  </div>
+        <button
+            type="submit"
+            class="btn-register"
+        >
 
-  <div class="form-group">
-    <label>Specialization</label>
-    <select name="specialization">
-      <option value="cardiology">Cardiology</option>
-      <option value="neurology">Neurology</option>
-      <option value="orthopedics">Orthopedics</option>
-      <option value="pediatrics">Pediatrics</option>
-      <option value="dermatology">Dermatology</option>
-    </select>
-  </div>
+            Register
 
-  <div class="form-group">
-    <label>Experience (in years)</label>
-    <input type="number" name="experience" min="0">
-  </div>
-</div>
+        </button>
 
-
-      <!-- Hidden input for role -->
-      <input type="hidden" name="role" id="role-input" value="patient">
-
-      <button type="submit" class="btn">Register</button>
     </form>
 
-    <div class="links">
-      Already have an account? <a href="{% url 'login_page' %}">Login here</a>
+    <div class="bottom-link">
+
+        Already have an account?
+
+        <a href="{% url 'login_page' %}">
+
+            Login
+
+        </a>
+
     </div>
-  </div>
 
-  <script>
-    function toggleForm() {
-      const role = document.querySelector('input[name="role-choice"]:checked').value;
-      const patientFields = document.getElementById("patient-fields");
-      const doctorFields = document.getElementById("doctor-fields");
+</div>
 
-      if (role === "patient") {
-        patientFields.classList.remove("hidden");
-        doctorFields.classList.add("hidden");
+<script>
 
-        // Make patient inputs required
-        patientFields.querySelectorAll("input, select").forEach(el => el.required = true);
-        // Make doctor inputs not required
-        doctorFields.querySelectorAll("input").forEach(el => el.required = false);
-      } else {
-        patientFields.classList.add("hidden");
-        doctorFields.classList.remove("hidden");
+function selectRole(role){
 
-        // Make doctor inputs required
-        doctorFields.querySelectorAll("input").forEach(el => el.required = true);
-        // Make patient inputs not required
-        patientFields.querySelectorAll("input, select").forEach(el => el.required = false);
-      }
+    const patientFields =
+    document.getElementById(
+        'patient-fields'
+    )
 
-      // Update hidden input so the role is submitted correctly
-      document.getElementById("role-input").value = role;
+    const doctorFields =
+    document.getElementById(
+        'doctor-fields'
+    )
+
+    const patientCard =
+    document.getElementById(
+        'patient-card'
+    )
+
+    const doctorCard =
+    document.getElementById(
+        'doctor-card'
+    )
+
+    document.getElementById(
+        'role-input'
+    ).value = role
+
+    // PATIENT
+
+    if(role === 'patient'){
+
+        patientFields.classList.remove(
+            'hidden'
+        )
+
+        doctorFields.classList.add(
+            'hidden'
+        )
+
+        patientCard.classList.add(
+            'active'
+        )
+
+        doctorCard.classList.remove(
+            'active'
+        )
+
+        patientFields
+        .querySelectorAll(
+            'input, select'
+        )
+        .forEach(el => {
+
+            el.required = true
+
+        })
+
+        doctorFields
+        .querySelectorAll(
+            'input, select'
+        )
+        .forEach(el => {
+
+            el.required = false
+
+        })
+
     }
 
-    // Initialize required fields on page load
-    window.addEventListener('DOMContentLoaded', toggleForm);
-  </script>
+    // DOCTOR
+
+    else{
+
+        doctorFields.classList.remove(
+            'hidden'
+        )
+
+        patientFields.classList.add(
+            'hidden'
+        )
+
+        doctorCard.classList.add(
+            'active'
+        )
+
+        patientCard.classList.remove(
+            'active'
+        )
+
+        doctorFields
+        .querySelectorAll(
+            'input, select'
+        )
+        .forEach(el => {
+
+            el.required = true
+
+        })
+
+        patientFields
+        .querySelectorAll(
+            'input, select'
+        )
+        .forEach(el => {
+
+            el.required = false
+
+        })
+
+    }
+
+}
+
+window.onload = function(){
+
+    selectRole('patient')
+
+}
+
+</script>
+
 </body>
 </html>

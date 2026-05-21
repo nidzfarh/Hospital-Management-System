@@ -1,46 +1,147 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from .models import Doctor
+
+from patient.models import Patient, Booking
+from doctor.models import Doctor
+
+
+# -----------------------------------
+# DOCTOR DASHBOARD
+# -----------------------------------
 
 @login_required
 def doctor_dashboard(request):
-    # Get the logged-in doctor's info
-    return render(request, 'dashboard.html')
+
+    total_patients = Patient.objects.count()
+
+    try:
+
+        # LOGGED-IN DOCTOR
+        doctor = Doctor.objects.get(
+            user=request.user
+        )
+
+        # ONLY THIS DOCTOR'S BOOKINGS
+        recent_bookings = Booking.objects.filter(
+            doctor=doctor
+        ).order_by(
+            'date',
+            'time'
+        )[:10]
+
+        # TOTAL APPOINTMENTS
+        today_appointments = Booking.objects.filter(
+            doctor=doctor
+        ).count()
+
+        # UNIQUE PATIENTS
+        today_patients = Booking.objects.filter(
+            doctor=doctor
+        ).values(
+            'patient'
+        ).distinct().count()
+
+    except Doctor.DoesNotExist:
+
+        recent_bookings = []
+
+        today_appointments = 0
+
+        today_patients = 0
+
+    context = {
+
+        'total_patients': total_patients,
+
+        'today_patients': today_patients,
+
+        'today_appointments': today_appointments,
+
+        'recent_bookings': recent_bookings,
+
+    }
+
+    return render(
+
+        request,
+
+        'doctor/dashboard.html',
+
+        context
+
+    )
+
+
+# -----------------------------------
+# DOCTOR PROFILE
+# -----------------------------------
 
 @login_required
 def doctor_profile(request):
-    doctor = Doctor.objects.get(user=request.user)
-    return render(request, 'profile.html')
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from patient.models import Booking  # adjust if your app name differs
-from .models import Doctor
+    try:
+
+        doctor = Doctor.objects.get(
+            user=request.user
+        )
+
+    except Doctor.DoesNotExist:
+
+        doctor = None
+
+    context = {
+
+        'doctor': doctor
+
+    }
+
+    return render(
+
+        request,
+
+        'doctor/profile.html',
+
+        context
+
+    )
+
+
+# -----------------------------------
+# DOCTOR APPOINTMENTS
+# -----------------------------------
 
 @login_required
 def doctor_appointments(request):
-    user = request.user
 
     try:
-        # find the logged-in doctor object
-        doctor = Doctor.objects.get(user=user)
+
+        doctor = Doctor.objects.get(
+            user=request.user
+        )
+
+        appointments = Booking.objects.filter(
+            doctor=doctor
+        ).order_by(
+            '-date',
+            '-time'
+        )
+
     except Doctor.DoesNotExist:
-        return render(request, 'appointments.html', {'error': 'Doctor profile not found'})
 
-    # get all doctors with the same specialization
-    same_spec_doctors = Doctor.objects.filter(specialization=doctor.specialization)
+        appointments = []
 
-    # get bookings for all doctors of that specialization
-    appointments = Booking.objects.filter(doctor__in=same_spec_doctors).order_by('date', 'time')
+    context = {
 
-    return render(request, 'appointments.html', {
-        'appointments': appointments,
-        'doctor': doctor,
-    })
+        'appointments': appointments
 
+    }
 
-# @login_required
-# def doctor_logout(request):
-#     logout(request)
-#     return redirect('login')
+    return render(
+
+        request,
+
+        'doctor/appointments.html',
+
+        context
+
+    )
